@@ -1,11 +1,31 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "crx-util",
   "version": "1.0.0",
   "description": "Download (and extract) Chrome/Edge extension (.crx).",
-  "main": "./index.js",
-  "bin": "./cli.js",
+  "type": "module",
+  "bin": "./dist/esm/cli.mjs",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "tshy",
+    "clean": "rimraf dist",
+    "build": "yarn clean && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix"
+  },
+  "prettier": {
+    "semi": false,
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "bracketSameLine": true,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
   },
   "keywords": [
     "crx",
@@ -20,19 +40,41 @@
   "publishConfig": {
     "access": "public"
   },
+  "packageManager": "yarn@4.1.1+sha256.f3cc0eda8e5560e529c7147565b30faa43b4e472d90e8634d7134a37c7f59781",
   "repository": {
     "type": "git",
     "url": "https://github.com/ssnangua/node-crx-util"
   },
-  "files": [
-    "index.js",
-    "downloader.js",
-    "parser.js",
-    "README.md",
-    "LICENSE"
-  ],
   "dependencies": {
-    "adm-zip": "^0.5.10",
-    "request": "^2.88.2"
+    "adm-zip": "^0.5.12"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/node": "^20.11.30",
+    "rimraf": "^5.0.5",
+    "tshy": "^1.12.0",
+    "typescript": "^5.4.3"
+  },
+  "tshy": {
+    "main": true,
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/main.ts"
+    }
+  },
+  "main": "./dist/commonjs/main.js",
+  "types": "./dist/commonjs/main.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/esm/main.d.ts",
+        "default": "./dist/esm/main.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/main.d.ts",
+        "default": "./dist/commonjs/main.js"
+      }
+    }
   }
 }
